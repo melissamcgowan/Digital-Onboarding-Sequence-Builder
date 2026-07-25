@@ -2,7 +2,7 @@
 
 A rule-based engine that generates a multi-touch, automated onboarding sequence (email + in-app messaging) tailored to account segment and product complexity — the kind of scaled, digital-led motion that replaces 1:1 onboarding calls once an account base gets too large to onboard manually.
 
-**[Live demo →](#)** *(update once published to GitHub Pages)*
+**[Live demo →](#)** (https://melissamcgowan.github.io/Digital-Onboarding-Sequence-Builder/)
 
 ## What it does
 
