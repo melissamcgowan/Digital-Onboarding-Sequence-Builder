@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Onboarding Sequence Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F5EF;
+    --paper-line:#DED8C9;
+    --ink:#22282F;
+    --ink-soft:#5B6470;
+    --route:#8C8368;
+    --email:#3B6E8F;
+    --email-bg:#E7EFF3;
+    --inapp:#B08A22;
+    --inapp-bg:#F3ECDA;
+    --both-bg:#EFEAF0;
+    --milestone:#7C5F82;
+    --card-bg:#FFFFFF;
+    --shadow: 0 1px 0 rgba(34,40,47,0.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:56px 28px 100px;}
+
+  header.hero{margin-bottom:44px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--route);
+    margin-bottom:14px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
+    font-weight:500;
+    font-size:clamp(32px, 4.4vw, 48px);
+    line-height:1.08;
+    margin:0 0 16px;
+    letter-spacing:-0.01em;
+  }
+  h1 em{font-style:italic; color:var(--email);}
+  .sub{
+    max-width:620px;
+    color:var(--ink-soft);
+    font-size:16px;
+  }
+
+  .panel{
+    background:var(--card-bg);
+    border:1px solid var(--paper-line);
+    border-radius:10px;
+    padding:26px 28px;
+    box-shadow:var(--shadow);
+    margin-bottom:46px;
+  }
+  .panel-title{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:18px;
+  }
+  .controls{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+  }
+  @media (max-width:640px){ .controls{grid-template-columns:1fr;} }
+  .field label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  .field select{
+    width:100%;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:15px;
+    padding:11px 12px;
+    border-radius:7px;
+    border:1px solid var(--paper-line);
+    background:var(--paper);
+    color:var(--ink);
+    appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%235B6470' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 14px center;
+    cursor:pointer;
+  }
+  .field select:focus{outline:2px solid var(--email); outline-offset:1px;}
+  .field .hint{font-size:12.5px; color:var(--ink-soft); margin-top:6px;}
+
+  .actions{display:flex; align-items:center; gap:14px; margin-top:24px; flex-wrap:wrap;}
+  button{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-weight:600;
+    font-size:14.5px;
+    border-radius:7px;
+    cursor:pointer;
+    border:none;
+  }
+  .btn-primary{
+    background:var(--ink);
+    color:var(--paper);
+    padding:12px 22px;
+  }
+  .btn-primary:hover{background:#0f1318;}
+  .btn-ghost{
+    background:transparent;
+    color:var(--ink-soft);
+    border:1px solid var(--paper-line);
+    padding:11px 18px;
+  }
+  .btn-ghost:hover{border-color:var(--ink-soft); color:var(--ink);}
+  .btn-ghost:disabled{opacity:0.45; cursor:not-allowed;}
+
+  .summary-line{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+
+  /* Journey / route */
+  #journey{position:relative;}
+  .journey-head{
+    display:flex; justify-content:space-between; align-items:baseline;
+    margin-bottom:26px; flex-wrap:wrap; gap:10px;
+  }
+  .journey-head h2{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:22px;
+    margin:0;
+  }
+  .legend{display:flex; gap:16px; font-size:12.5px; color:var(--ink-soft); flex-wrap:wrap;}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+  .dot.email{background:var(--email);}
+  .dot.inapp{background:var(--inapp);}
+  .dot.both{background:var(--milestone);}
+
+  .route{position:relative; padding-left:26px;}
+  .route::before{
+    content:"";
+    position:absolute;
+    left:9px; top:6px; bottom:6px;
+    width:2px;
+    background:repeating-linear-gradient(to bottom, var(--paper-line) 0 6px, transparent 6px 11px);
+  }
+  .stop{
+    position:relative;
+    padding-bottom:30px;
+  }
+  .stop:last-child{padding-bottom:0;}
+  .stop::before{
+    content:"";
+    position:absolute;
+    left:-26px; top:4px;
+    width:19px; height:19px;
+    border-radius:50%;
+    background:var(--paper);
+    border:2px solid var(--route);
+  }
+  .stop.email::before{border-color:var(--email);}
+  .stop.inapp::before{border-color:var(--inapp);}
+  .stop.both::before{border-color:var(--milestone);}
+  .stop::after{
+    content:"";
+    position:absolute;
+    left:-19.5px; top:9.5px;
+    width:6px;height:6px;border-radius:50%;
+    background:var(--route);
+  }
+  .stop.email::after{background:var(--email);}
+  .stop.inapp::after{background:var(--inapp);}
+  .stop.both::after{background:var(--milestone);}
+
+  .stop-card{
+    background:var(--card-bg);
+    border:1px solid var(--paper-line);
+    border-radius:9px;
+    padding:16px 18px;
+    box-shadow:var(--shadow);
+  }
+  .stop-top{
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:8px;
+  }
+  .day-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    letter-spacing:0.02em;
+  }
+  .chan-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:3px 9px;
+    border-radius:999px;
+  }
+  .chan-tag.email{background:var(--email-bg); color:var(--email);}
+  .chan-tag.inapp{background:var(--inapp-bg); color:var(--inapp);}
+  .chan-tag.both{background:var(--both-bg); color:var(--milestone);}
+  .stop-title{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:17.5px;
+    margin:0 0 6px;
+  }
+  .stop-purpose{font-size:14px; color:var(--ink-soft); margin:0 0 10px;}
+  details{margin-top:2px;}
+  summary{
+    cursor:pointer;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--email);
+    list-style:none;
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary:before{content:"+ "; }
+  details[open] summary:before{content:"– ";}
+  .copy-block{
+    margin-top:10px;
+    padding:12px 14px;
+    background:var(--paper);
+    border-radius:7px;
+    font-size:13.5px;
+    color:var(--ink);
+    white-space:pre-wrap;
+    border:1px solid var(--paper-line);
+  }
+  .empty{
+    color:var(--ink-soft);
+    font-size:14.5px;
+    padding:40px 0;
+    text-align:center;
+  }
+  footer{
+    margin-top:64px;
+    padding-top:22px;
+    border-top:1px solid var(--paper-line);
+    font-size:12.5px;
+    color:var(--ink-soft);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+  footer a{color:var(--ink-soft);}
+  @media (prefers-reduced-motion: no-preference){
+    .stop{animation:rise 0.35s ease both;}
+  }
+  @keyframes rise{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">CS Automation Portfolio — Scaled Onboarding</div>
+    <h1>Digital Onboarding<br><em>Sequence</em> Builder</h1>
+    <p class="sub">Pick an account segment and product complexity, and generate the multi-touch, automated onboarding cadence — email + in-app — that replaces a string of 1:1 kickoff calls with a route the account can follow on its own.</p>
+  </header>
+
+  <div class="panel">
+    <div class="panel-title">Configure the account</div>
+    <div class="controls">
+      <div class="field">
+        <label for="segment">Account segment</label>
+        <select id="segment">
+          <option value="smb">SMB / Self-serve</option>
+          <option value="mid" selected>Mid-Market</option>
+          <option value="ent">Enterprise</option>
+        </select>
+        <div class="hint" id="segment-hint"></div>
+      </div>
+      <div class="field">
+        <label for="complexity">Product complexity</label>
+        <select id="complexity">
+          <option value="low">Low — single core workflow</option>
+          <option value="med" selected>Medium — a few connected workflows</option>
+          <option value="high">High — multi-module / admin setup required</option>
+        </select>
+        <div class="hint" id="complexity-hint"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn-primary" id="generate">Generate sequence</button>
+      <button class="btn-ghost" id="export" disabled>Export JSON</button>
+      <span class="summary-line" id="summary-line"></span>
+    </div>
+  </div>
+
+  <div id="journey">
+    <div class="journey-head">
+      <h2>Sequence</h2>
+      <div class="legend">
+        <span><span class="dot email"></span>Email</span>
+        <span><span class="dot inapp"></span>In-app</span>
+        <span><span class="dot both"></span>Email + in-app</span>
+      </div>
+    </div>
+    <div class="route" id="route">
+      <div class="empty">No sequence generated yet — set the segment and complexity above, then generate.</div>
+    </div>
+  </div>
+
+  <footer>
+    <span>Digital Onboarding Sequence Builder — part of the AI-powered CS automation portfolio.</span>
+    <span>Rule-based cadence engine, runs entirely client-side.</span>
+  </footer>
+</div>
+
+<script>
+// ---- Segment base cadences (day offsets) + tone ----
+const SEGMENTS = {
+  smb: {
+    label: "SMB / Self-serve",
+    hint: "Short, high-automation cycle. Goal: first value inside week one, no manual touch required.",
+    days: [0, 1, 3, 7, 14],
+    style: "brisk"
+  },
+  mid: {
+    label: "Mid-Market",
+    hint: "Balanced cycle with a couple of check-ins. Goal: guided activation across core workflows by day 30.",
+    days: [0, 1, 3, 7, 14, 21, 30],
+    style: "guided"
+  },
+  ent: {
+    label: "Enterprise",
+    hint: "Longer, milestone-based cycle. Goal: full rollout across admin + end users by day 90, with stall detection.",
+    days: [0, 1, 3, 7, 14, 21, 30, 45, 60, 90],
+    style: "milestone"
+  }
+};
+
+const COMPLEXITY_HINTS = {
+  low: "Adds no extra setup steps — sequence stays lean.",
+  med: "Adds a feature-adoption nudge mid-sequence.",
+  high: "Adds admin-configuration and multi-module adoption checkpoints."
+};
+
+// ---- Touchpoint templates by day-role across the journey ----
+function buildSequence(segmentKey, complexityKey){
+  const seg = SEGMENTS[segmentKey];
+  const days = [...seg.days];
+  const stops = [];
+
+  days.forEach((day, i) => {
+    const isFirst = i === 0;
+    const isLast = i === days.length - 1;
+    const pos = i / (days.length - 1); // 0..1 progress through sequence
+
+    let channel, title, purpose, copy;
+
+    if (isFirst){
+      channel = "both";
+      title = "Welcome + first setup step";
+      purpose = "Confirms the account is live and points to the single next action, not a full setup guide.";
+      copy = emailCopy("Welcome aboard", `Your account's ready. Here's the one thing to do today: ${firstStep(segmentKey)}.\n\nWe'll check in after that's done — no need to reply.`) +
+             "\n\n" + inappCopy(`Tooltip on first login: "${firstStep(segmentKey)} — start here."`);
+    } else if (day === 1){
+      channel = "inapp";
+      title = "In-app nudge: first action";
+      purpose = "Lightweight nudge if the day-0 step hasn't been completed yet.";
+      copy = inappCopy(`Banner: "Haven't ${firstStep(segmentKey).toLowerCase()} yet? Takes about 5 minutes."`);
+    } else if (day === 3){
+      channel = "email";
+      title = "Quick win check-in";
+      purpose = "Reinforces the first success moment and previews what's next.";
+      copy = emailCopy("Nice — you're set up", `You completed ${firstStep(segmentKey).toLowerCase()}. Next up: ${secondStep(segmentKey)}.\n\nHere's a 2-minute guide if useful: [link]`);
+    } else if (day === 7 && complexityKey !== "low" && !isLast){
+      channel = "both";
+      title = "Feature adoption nudge";
+      purpose = complexityKey === "high"
+        ? "Given the product's complexity, this checkpoint surfaces the next module before the account stalls."
+        : "Points to the second core workflow now that the first is established.";
+      copy = emailCopy("A feature worth trying", `Teams like yours usually add ${secondFeature(complexityKey)} around this point. Want a walkthrough?`) +
+             "\n\n" + inappCopy(`In-app checklist item unlocks: "${secondFeature(complexityKey)}"`);
+    } else if (day === 14){
+      channel = "email";
+      title = seg.style === "brisk" ? "Two-week recap" : "Progress check-in";
+      purpose = "Automated summary of usage so far, with a branch: on track vs. falling behind benchmark.";
+      copy = emailCopy("How the first two weeks went", `Usage summary attached. If you're on track, here's what week 3 looks like. If something's blocking you, reply and it routes straight to your CSM.`);
+    } else if (day === 21){
+      channel = "inapp";
+      title = "Admin configuration checkpoint";
+      purpose = complexityKey === "high"
+        ? "High-complexity products need admin setup confirmed before broader rollout — this checks that box."
+        : "Confirms account settings are configured the way the team intended.";
+      copy = inappCopy(`Checklist: "Confirm admin settings before inviting more users."`);
+    } else if (day === 30 && !isLast){
+      channel = "both";
+      title = "30-day value recap + expansion seed";
+      purpose = "Shows measurable value achieved and plants the first expansion signal without a hard pitch.";
+      copy = emailCopy("30 days in", `Here's what you've accomplished: [usage stats]. Teams at this stage often add [adjacent feature] — flagging it in case it's useful.`) +
+             "\n\n" + inappCopy(`Dashboard banner: "30-day milestone reached — see your usage recap."`);
+    } else if (day === 30 && isLast){
+      channel = "both";
+      title = "30-day milestone: onboarding complete";
+      purpose = "Marks handoff from onboarding cadence to standard lifecycle cadence.";
+      copy = emailCopy("You're fully onboarded", `That's the full sequence. From here you'll hear from us on our regular cadence — reach out any time in between.`) +
+             "\n\n" + inappCopy(`Checklist marked complete: "Onboarding — done."`);
+    } else if (day === 45){
+      channel = "inapp";
+      title = "Rollout expansion nudge";
+      purpose = "Encourages inviting additional users/teams now that core admin is configured.";
+      copy = inappCopy(`Banner: "Ready to invite your team? Add users in Settings."`);
+    } else if (day === 60){
+      channel = "email";
+      title = "Stall-check / escalation trigger";
+      purpose = "Automated branch: if usage has plateaued, this routes to a save-play instead of a generic email — the trigger a CSM would otherwise have to catch manually.";
+      copy = emailCopy("Checking in on rollout", `If usage has plateaued here, this account gets flagged for a CSM touch instead of another automated email — the sequence hands off rather than repeating itself.`);
+    } else if (isLast){
+      channel = "both";
+      title = "90-day rollout milestone";
+      purpose = "Final checkpoint: confirms full rollout across the org and formally exits the onboarding motion.";
+      copy = emailCopy("90 days: rollout complete", `Full rollout confirmed. You're moving to our standard account cadence from here.`) +
+             "\n\n" + inappCopy(`Checklist marked complete: "Enterprise rollout — done."`);
+    } else {
+      channel = "email";
+      title = "Check-in";
+      purpose = "Standard progress touch to keep momentum between milestones.";
+      copy = emailCopy("Quick check-in", `Flagging where things stand and what's next — reply if anything's blocking progress.`);
+    }
+
+    stops.push({ day, channel, title, purpose, copy });
+  });
+
+  return stops;
+}
+
+function firstStep(segmentKey){
+  return { smb: "Connect your first data source", mid: "Invite your core team", ent: "Complete admin configuration" }[segmentKey];
+}
+function secondStep(segmentKey){
+  return { smb: "set up your first automation", mid: "configure your first workflow", ent: "roll out to your first department" }[segmentKey];
+}
+function secondFeature(complexityKey){
+  return { low: "a saved view", med: "a second workflow module", high: "the integrations panel" }[complexityKey];
+}
+function emailCopy(subject, body){
+  return `EMAIL\nSubject: ${subject}\n\n${body}`;
+}
+function inappCopy(body){
+  return `IN-APP\n${body}`;
+}
+
+// ---- Render ----
+let currentSequence = null;
+let currentMeta = null;
+
+function render(){
+  const segmentKey = document.getElementById("segment").value;
+  const complexityKey = document.getElementById("complexity").value;
+  const seg = SEGMENTS[segmentKey];
+
+  document.getElementById("segment-hint").textContent = seg.hint;
+  document.getElementById("complexity-hint").textContent = COMPLEXITY_HINTS[complexityKey];
+
+  const stops = buildSequence(segmentKey, complexityKey);
+  currentSequence = stops;
+  currentMeta = { segment: seg.label, complexity: complexityKey, generatedAt: new Date().toISOString() };
+
+  const route = document.getElementById("route");
+  route.innerHTML = "";
+  stops.forEach(stop => {
+    const div = document.createElement("div");
+    div.className = `stop ${stop.channel}`;
+    div.innerHTML = `
+      <div class="stop-card">
+        <div class="stop-top">
+          <span class="day-tag">Day ${stop.day}</span>
+          <span class="chan-tag ${stop.channel}">${stop.channel === "both" ? "Email + In-app" : stop.channel === "email" ? "Email" : "In-app"}</span>
+        </div>
+        <h3 class="stop-title">${stop.title}</h3>
+        <p class="stop-purpose">${stop.purpose}</p>
+        <details>
+          <summary>Preview content</summary>
+          <div class="copy-block">${stop.copy}</div>
+        </details>
+      </div>
+    `;
+    route.appendChild(div);
+  });
+
+  document.getElementById("summary-line").textContent =
+    `${stops.length} touchpoints · ${seg.label} · ${stops[stops.length-1].day}-day cycle`;
+  document.getElementById("export").disabled = false;
+}
+
+document.getElementById("generate").addEventListener("click", render);
+document.getElementById("export").addEventListener("click", () => {
+  if (!currentSequence) return;
+  const payload = { meta: currentMeta, sequence: currentSequence };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `onboarding-sequence-${currentMeta.segment.toLowerCase().replace(/[^a-z]+/g,'-')}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// Initial render on load
+render();
+</script>
+</body>
+</html>
