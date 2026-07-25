@@ -9,10 +9,10 @@ A rule-based engine that generates a multi-touch, automated onboarding sequence 
 Given an account **segment** (SMB/self-serve, Mid-Market, Enterprise) and a **product complexity** level, it builds out a day-by-day cadence of touchpoints, each tagged by channel (email, in-app, or both), with:
 
 - A rationale for why that touchpoint exists at that point in the journey
-- Preview content (subject line / body for email, banner or checklist copy for in-app)
+- Preview content (subject line/body for email, banner or checklist copy for in-app)
 - Segment-appropriate cycle length (5 touchpoints over 14 days for SMB, up to 10 touchpoints over 90 days for Enterprise)
 - Complexity-aware checkpoints (e.g., an admin-configuration step is only inserted for high-complexity products)
-- A built-in stall-check / escalation touchpoint late in the Enterprise sequence — the automated equivalent of a CSM catching a plateaued account
+- A built-in stall-check/escalation touchpoint late in the Enterprise sequence, the automated equivalent of a CSM catching a plateaued account
 
 Sequences can be exported as JSON for use in an actual marketing automation or in-app messaging tool (e.g., as a spec handed to Customer.io, Iterable, or Pendo).
 
