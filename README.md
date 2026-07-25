@@ -6,7 +6,7 @@ A rule-based engine that generates a multi-touch, automated onboarding sequence 
 
 ## What it does
 
-Given an account **segment** (SMB/self-serve, Mid-Market, Enterprise) and a **product complexity** level, it builds out a day-by-day cadence of touchpoints — each tagged by channel (email, in-app, or both) — with:
+Given an account **segment** (SMB/self-serve, Mid-Market, Enterprise) and a **product complexity** level, it builds out a day-by-day cadence of touchpoints, each tagged by channel (email, in-app, or both), with:
 
 - A rationale for why that touchpoint exists at that point in the journey
 - Preview content (subject line / body for email, banner or checklist copy for in-app)
@@ -18,11 +18,11 @@ Sequences can be exported as JSON for use in an actual marketing automation or i
 
 ## Why this exists
 
-Manual 1:1 onboarding calls don't scale past a certain account volume. This project prototypes the logic a CS team would need to encode once before it can hand onboarding off to automation — segment-aware cadence, channel selection, and a defined point where the system should stop emailing and flag a human instead.
+Manual 1:1 onboarding calls don't scale past a certain account volume. This project prototypes the logic a CS team would need to encode once before it can hand onboarding off to automation: segment-aware cadence, channel selection, and a defined point where the system should stop emailing and flag a human instead.
 
 ## Tech
 
-Single-file static app — vanilla HTML/CSS/JS, no build step, no dependencies. Deploys directly via GitHub Pages.
+Single-file static app, vanilla HTML/CSS/JS, no build step, no dependencies. Deploys directly via GitHub Pages.
 
 ## Part of a larger portfolio
 
