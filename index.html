@@ -271,7 +271,7 @@
   <header class="hero">
     <div class="eyebrow">CS Automation Portfolio — Scaled Onboarding</div>
     <h1>Digital Onboarding<br><em>Sequence</em> Builder</h1>
-    <p class="sub">Pick an account segment and product complexity, and generate the multi-touch, automated onboarding cadence — email + in-app — that replaces a string of 1:1 kickoff calls with a route the account can follow on its own.</p>
+    <p class="sub">Pick an account segment and product complexity, and generate the multi-touch, automated onboarding cadence, email + in-app, that replaces a string of 1:1 kickoff calls with a route the account can follow on its own.</p>
   </header>
 
   <div class="panel">
@@ -289,9 +289,9 @@
       <div class="field">
         <label for="complexity">Product complexity</label>
         <select id="complexity">
-          <option value="low">Low — single core workflow</option>
-          <option value="med" selected>Medium — a few connected workflows</option>
-          <option value="high">High — multi-module / admin setup required</option>
+          <option value="low">Low - single core workflow</option>
+          <option value="med" selected>Medium - a few connected workflows</option>
+          <option value="high">High - multi-module / admin setup required</option>
         </select>
         <div class="hint" id="complexity-hint"></div>
       </div>
@@ -313,12 +313,12 @@
       </div>
     </div>
     <div class="route" id="route">
-      <div class="empty">No sequence generated yet — set the segment and complexity above, then generate.</div>
+      <div class="empty">No sequence generated yet; set the segment and complexity above, then generate.</div>
     </div>
   </div>
 
   <footer>
-    <span>Digital Onboarding Sequence Builder — part of the AI-powered CS automation portfolio.</span>
+    <span>Digital Onboarding Sequence Builder - part of the AI-powered CS automation portfolio.</span>
     <span>Rule-based cadence engine, runs entirely client-side.</span>
   </footer>
 </div>
@@ -347,7 +347,7 @@ const SEGMENTS = {
 };
 
 const COMPLEXITY_HINTS = {
-  low: "Adds no extra setup steps — sequence stays lean.",
+  low: "Adds no extra setup steps - sequence stays lean.",
   med: "Adds a feature-adoption nudge mid-sequence.",
   high: "Adds admin-configuration and multi-module adoption checkpoints."
 };
@@ -369,8 +369,8 @@ function buildSequence(segmentKey, complexityKey){
       channel = "both";
       title = "Welcome + first setup step";
       purpose = "Confirms the account is live and points to the single next action, not a full setup guide.";
-      copy = emailCopy("Welcome aboard", `Your account's ready. Here's the one thing to do today: ${firstStep(segmentKey)}.\n\nWe'll check in after that's done — no need to reply.`) +
-             "\n\n" + inappCopy(`Tooltip on first login: "${firstStep(segmentKey)} — start here."`);
+      copy = emailCopy("Welcome aboard", `Your account's ready. Here's the one thing to do today: ${firstStep(segmentKey)}.\n\nWe'll check in after that's done, no need to reply.`) +
+             "\n\n" + inappCopy(`Tooltip on first login: "${firstStep(segmentKey)} - start here."`);
     } else if (day === 1){
       channel = "inapp";
       title = "In-app nudge: first action";
@@ -380,7 +380,7 @@ function buildSequence(segmentKey, complexityKey){
       channel = "email";
       title = "Quick win check-in";
       purpose = "Reinforces the first success moment and previews what's next.";
-      copy = emailCopy("Nice — you're set up", `You completed ${firstStep(segmentKey).toLowerCase()}. Next up: ${secondStep(segmentKey)}.\n\nHere's a 2-minute guide if useful: [link]`);
+      copy = emailCopy("Nice - you're set up", `You completed ${firstStep(segmentKey).toLowerCase()}. Next up: ${secondStep(segmentKey)}.\n\nHere's a 2-minute guide if useful: [link]`);
     } else if (day === 7 && complexityKey !== "low" && !isLast){
       channel = "both";
       title = "Feature adoption nudge";
@@ -398,20 +398,20 @@ function buildSequence(segmentKey, complexityKey){
       channel = "inapp";
       title = "Admin configuration checkpoint";
       purpose = complexityKey === "high"
-        ? "High-complexity products need admin setup confirmed before broader rollout — this checks that box."
+        ? "High-complexity products need admin setup confirmed before broader rollout; this checks that box."
         : "Confirms account settings are configured the way the team intended.";
       copy = inappCopy(`Checklist: "Confirm admin settings before inviting more users."`);
     } else if (day === 30 && !isLast){
       channel = "both";
       title = "30-day value recap + expansion seed";
       purpose = "Shows measurable value achieved and plants the first expansion signal without a hard pitch.";
-      copy = emailCopy("30 days in", `Here's what you've accomplished: [usage stats]. Teams at this stage often add [adjacent feature] — flagging it in case it's useful.`) +
-             "\n\n" + inappCopy(`Dashboard banner: "30-day milestone reached — see your usage recap."`);
+      copy = emailCopy("30 days in", `Here's what you've accomplished: [usage stats]. Teams at this stage often add [adjacent feature], flagging it in case it's useful.`) +
+             "\n\n" + inappCopy(`Dashboard banner: "30-day milestone reached: see your usage recap."`);
     } else if (day === 30 && isLast){
       channel = "both";
       title = "30-day milestone: onboarding complete";
       purpose = "Marks handoff from onboarding cadence to standard lifecycle cadence.";
-      copy = emailCopy("You're fully onboarded", `That's the full sequence. From here you'll hear from us on our regular cadence — reach out any time in between.`) +
+      copy = emailCopy("You're fully onboarded", `That's the full sequence. From here you'll hear from us on our regular cadence, reach out any time in between.`) +
              "\n\n" + inappCopy(`Checklist marked complete: "Onboarding — done."`);
     } else if (day === 45){
       channel = "inapp";
@@ -421,19 +421,19 @@ function buildSequence(segmentKey, complexityKey){
     } else if (day === 60){
       channel = "email";
       title = "Stall-check / escalation trigger";
-      purpose = "Automated branch: if usage has plateaued, this routes to a save-play instead of a generic email — the trigger a CSM would otherwise have to catch manually.";
-      copy = emailCopy("Checking in on rollout", `If usage has plateaued here, this account gets flagged for a CSM touch instead of another automated email — the sequence hands off rather than repeating itself.`);
+      purpose = "Automated branch: if usage has plateaued, this routes to a save-play instead of a generic email; the trigger a CSM would otherwise have to catch manually.";
+      copy = emailCopy("Checking in on rollout", `If usage has plateaued here, this account gets flagged for a CSM touch instead of another automated email; the sequence hands off rather than repeating itself.`);
     } else if (isLast){
       channel = "both";
       title = "90-day rollout milestone";
       purpose = "Final checkpoint: confirms full rollout across the org and formally exits the onboarding motion.";
       copy = emailCopy("90 days: rollout complete", `Full rollout confirmed. You're moving to our standard account cadence from here.`) +
-             "\n\n" + inappCopy(`Checklist marked complete: "Enterprise rollout — done."`);
+             "\n\n" + inappCopy(`Checklist marked complete: "Enterprise rollout: done."`);
     } else {
       channel = "email";
       title = "Check-in";
       purpose = "Standard progress touch to keep momentum between milestones.";
-      copy = emailCopy("Quick check-in", `Flagging where things stand and what's next — reply if anything's blocking progress.`);
+      copy = emailCopy("Quick check-in", `Flagging where things stand and what's next; reply if anything's blocking progress.`);
     }
 
     stops.push({ day, channel, title, purpose, copy });
